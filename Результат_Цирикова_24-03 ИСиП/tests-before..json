@@ -1,0 +1,102 @@
+[
+  {
+    "name": "T05-PUMP-HYST: проверка удержания pump на границе 35",
+    "steps": [
+      {
+        "input": {
+          "humidity": 50,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": false,
+          "used": 0
+        }
+      },
+      {
+        "input": {
+          "humidity": 35,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": false,
+          "used": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "T03-LATCH: проверка удержания аварии при свежем входе без reset",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 20,
+          "age": 31,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": true,
+          "used": 0
+        }
+      },
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": true,
+          "used": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "T09-BUDGET: проверка приоритета вентиляции при budget=3",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 30,
+          "age": 0,
+          "tank": 50,
+          "budget": 3,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": true,
+          "fault": false,
+          "used": 3
+        }
+      }
+    ]
+  }
+]
