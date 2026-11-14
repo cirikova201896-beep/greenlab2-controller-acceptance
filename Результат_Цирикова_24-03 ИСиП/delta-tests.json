@@ -1,0 +1,119 @@
+[
+  {
+    "name": "DELTA-01: Новый порог включения 40 (вместо 35)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 50,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": false,
+          "used": 0
+        }
+      },
+      {
+        "input": {
+          "humidity": 38,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": true,
+          "vent": false,
+          "fault": false,
+          "used": 2
+        }
+      }
+    ]
+  },
+  {
+    "name": "DELTA-02: Удержание при 38, если насос уже был включен",
+    "steps": [
+      {
+        "input": {
+          "humidity": 30,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": true,
+          "vent": false,
+          "fault": false,
+          "used": 2
+        }
+      },
+      {
+        "input": {
+          "humidity": 38,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": true,
+          "vent": false,
+          "fault": false,
+          "used": 2
+        }
+      }
+    ]
+  },
+  {
+    "name": "COUNTER-BUDGET: Контрпример монотонности (рост бюджета 2 -> 3 выключает насос)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 30,
+          "age": 0,
+          "tank": 50,
+          "budget": 2,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": true,
+          "vent": false,
+          "fault": false,
+          "used": 2
+        }
+      },
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 30,
+          "age": 0,
+          "tank": 50,
+          "budget": 3,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": true,
+          "fault": false,
+          "used": 3
+        }
+      }
+    ]
+  }
+]
