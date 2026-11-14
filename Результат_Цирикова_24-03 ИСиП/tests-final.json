@@ -1,6 +1,6 @@
 [
   {
-    "name": "T05-PUMP-HYST: проверка удержания pump на границе 35",
+    "name": "T05-PUMP-HYST: удержание pump на границе 35 (убивает M1)",
     "steps": [
       {
         "input": {
@@ -39,7 +39,7 @@
     ]
   },
   {
-    "name": "T03-LATCH: проверка удержания аварии при свежем входе без reset",
+    "name": "T03-LATCH: удержание аварии без reset (убивает M5)",
     "steps": [
       {
         "input": {
@@ -78,7 +78,7 @@
     ]
   },
   {
-    "name": "T09-BUDGET: проверка приоритета вентиляции при budget=3",
+    "name": "T09-BUDGET: приоритет вентиляции при budget=3 (убивает M3, M6)",
     "steps": [
       {
         "input": {
@@ -95,6 +95,221 @@
           "vent": true,
           "fault": false,
           "used": 3
+        }
+      }
+    ]
+  },
+  {
+    "name": "T01-VALID: невалидный ввод (покрывает valid:false)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 101,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": true,
+          "used": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "T04-VENT-STOP: проверка ventStop:false и pumpFits:true",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 28,
+          "age": 0,
+          "tank": 50,
+          "budget": 2,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": true,
+          "vent": false,
+          "fault": false,
+          "used": 2
+        }
+      }
+    ]
+  },
+  {
+    "name": "T06-COLD-3: запрет насоса при temp=3 (убивает M7)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 3,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": false,
+          "used": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "T07-RAIN: запрет насоса при дожде (покрывает rain:true)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": true,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": false,
+          "used": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "T08-LOWTANK-9: запрет насоса при tank=9 (покрывает lowTank:true)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 20,
+          "age": 0,
+          "tank": 9,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": false,
+          "used": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "T08-LOWTANK-10: разрешение насоса при tank=10 (убивает M8)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 20,
+          "age": 0,
+          "tank": 10,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": true,
+          "vent": false,
+          "fault": false,
+          "used": 2
+        }
+      }
+    ]
+  },
+  {
+    "name": "T02-AGE-30: граница свежести age=30 (убивает M4)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 20,
+          "age": 30,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": true,
+          "vent": false,
+          "fault": false,
+          "used": 2
+        }
+      }
+    ]
+  },
+  {
+    "name": "T09-BUDGET-VENT-FAIL: нехватка бюджета для вентиляции (покрывает ventFits:false)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 50,
+          "temp": 30,
+          "age": 0,
+          "tank": 50,
+          "budget": 2,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": false,
+          "used": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "T05-PUMP-STOP-45: остановка насоса на границе 45 (убивает M2)",
+    "steps": [
+      {
+        "input": {
+          "humidity": 20,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": true,
+          "vent": false,
+          "fault": false,
+          "used": 2
+        }
+      },
+      {
+        "input": {
+          "humidity": 45,
+          "temp": 20,
+          "age": 0,
+          "tank": 50,
+          "budget": 5,
+          "rain": false,
+          "reset": false
+        },
+        "expected": {
+          "pump": false,
+          "vent": false,
+          "fault": false,
+          "used": 0
         }
       }
     ]
