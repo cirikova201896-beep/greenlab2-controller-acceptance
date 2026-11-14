@@ -1,0 +1,635 @@
+GREENLAB 2 · ПРОТОКОЛ
+{
+  "createdAt": "2026-11-14T08:17:28.585Z",
+  "tests": [
+    {
+      "name": "T05-PUMP-HYST: проверка удержания pump на границе 35",
+      "steps": [
+        {
+          "input": {
+            "humidity": 50,
+            "temp": 20,
+            "age": 0,
+            "tank": 50,
+            "budget": 5,
+            "rain": false,
+            "reset": false
+          },
+          "expected": {
+            "pump": false,
+            "vent": false,
+            "fault": false,
+            "used": 0
+          }
+        },
+        {
+          "input": {
+            "humidity": 35,
+            "temp": 20,
+            "age": 0,
+            "tank": 50,
+            "budget": 5,
+            "rain": false,
+            "reset": false
+          },
+          "expected": {
+            "pump": false,
+            "vent": false,
+            "fault": false,
+            "used": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "T03-LATCH: проверка удержания аварии при свежем входе без reset",
+      "steps": [
+        {
+          "input": {
+            "humidity": 20,
+            "temp": 20,
+            "age": 31,
+            "tank": 50,
+            "budget": 5,
+            "rain": false,
+            "reset": false
+          },
+          "expected": {
+            "pump": false,
+            "vent": false,
+            "fault": true,
+            "used": 0
+          }
+        },
+        {
+          "input": {
+            "humidity": 20,
+            "temp": 20,
+            "age": 0,
+            "tank": 50,
+            "budget": 5,
+            "rain": false,
+            "reset": false
+          },
+          "expected": {
+            "pump": false,
+            "vent": false,
+            "fault": true,
+            "used": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "T09-BUDGET: проверка приоритета вентиляции при budget=3",
+      "steps": [
+        {
+          "input": {
+            "humidity": 20,
+            "temp": 30,
+            "age": 0,
+            "tank": 50,
+            "budget": 3,
+            "rain": false,
+            "reset": false
+          },
+          "expected": {
+            "pump": false,
+            "vent": true,
+            "fault": false,
+            "used": 3
+          }
+        }
+      ]
+    }
+  ],
+  "reference": [
+    {
+      "name": "T05-PUMP-HYST: проверка удержания pump на границе 35",
+      "steps": [
+        {
+          "number": 1,
+          "input": {
+            "humidity": 50,
+            "temp": 20,
+            "age": 0,
+            "tank": 50,
+            "budget": 5,
+            "rain": false,
+            "reset": false
+          },
+          "before": {
+            "pump": false,
+            "vent": false,
+            "fault": false
+          },
+          "expected": {
+            "pump": false,
+            "vent": false,
+            "fault": false,
+            "used": 0
+          },
+          "actual": {
+            "pump": false,
+            "vent": false,
+            "fault": false,
+            "used": 0
+          },
+          "pass": true,
+          "reason": "NORMAL",
+          "trace": [
+            "valid:true",
+            "fresh:true",
+            "latched:false",
+            "ventStart:false",
+            "ventStop:true",
+            "pumpStart:false",
+            "pumpStop:true",
+            "cold:false",
+            "rain:false",
+            "lowTank:false"
+          ]
+        },
+        {
+          "number": 2,
+          "input": {
+            "humidity": 35,
+            "temp": 20,
+            "age": 0,
+            "tank": 50,
+            "budget": 5,
+            "rain": false,
+            "reset": false
+          },
+          "before": {
+            "pump": false,
+            "vent": false,
+            "fault": false
+          },
+          "expected": {
+            "pump": false,
+            "vent": false,
+            "fault": false,
+            "used": 0
+          },
+          "actual": {
+            "pump": false,
+            "vent": false,
+            "fault": false,
+            "used": 0
+          },
+          "pass": true,
+          "reason": "NORMAL",
+          "trace": [
+            "valid:true",
+            "fresh:true",
+            "latched:false",
+            "ventStart:false",
+            "ventStop:true",
+            "pumpStart:false",
+            "pumpStop:false",
+            "cold:false",
+            "rain:false",
+            "lowTank:false"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "T03-LATCH: проверка удержания аварии при свежем входе без reset",
+      "steps": [
+        {
+          "number": 1,
+          "input": {
+            "humidity": 20,
+            "temp": 20,
+            "age": 31,
+            "tank": 50,
+            "budget": 5,
+            "rain": false,
+            "reset": false
+          },
+          "before": {
+            "pump": false,
+            "vent": false,
+            "fault": false
+          },
+          "expected": {
+            "pump": false,
+            "vent": false,
+            "fault": true,
+            "used": 0
+          },
+          "actual": {
+            "pump": false,
+            "vent": false,
+            "fault": true,
+            "used": 0
+          },
+          "pass": true,
+          "reason": "STALE",
+          "trace": [
+            "valid:true",
+            "fresh:false"
+          ]
+        },
+        {
+          "number": 2,
+          "input": {
+            "humidity": 20,
+            "temp": 20,
+            "age": 0,
+            "tank": 50,
+            "budget": 5,
+            "rain": false,
+            "reset": false
+          },
+          "before": {
+            "pump": false,
+            "vent": false,
+            "fault": true
+          },
+          "expected": {
+            "pump": false,
+            "vent": false,
+            "fault": true,
+            "used": 0
+          },
+          "actual": {
+            "pump": false,
+            "vent": false,
+            "fault": true,
+            "used": 0
+          },
+          "pass": true,
+          "reason": "LATCHED",
+          "trace": [
+            "valid:true",
+            "fresh:true",
+            "latched:true"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "T09-BUDGET: проверка приоритета вентиляции при budget=3",
+      "steps": [
+        {
+          "number": 1,
+          "input": {
+            "humidity": 20,
+            "temp": 30,
+            "age": 0,
+            "tank": 50,
+            "budget": 3,
+            "rain": false,
+            "reset": false
+          },
+          "before": {
+            "pump": false,
+            "vent": false,
+            "fault": false
+          },
+          "expected": {
+            "pump": false,
+            "vent": true,
+            "fault": false,
+            "used": 3
+          },
+          "actual": {
+            "pump": false,
+            "vent": true,
+            "fault": false,
+            "used": 3
+          },
+          "pass": true,
+          "reason": "BUDGET",
+          "trace": [
+            "valid:true",
+            "fresh:true",
+            "latched:false",
+            "ventStart:true",
+            "pumpStart:true",
+            "cold:false",
+            "rain:false",
+            "lowTank:false",
+            "ventFits:true",
+            "pumpFits:false"
+          ]
+        }
+      ]
+    }
+  ],
+  "candidate": [
+    {
+      "name": "T05-PUMP-HYST: проверка удержания pump на границе 35",
+      "steps": [
+        {
+          "number": 1,
+          "input": {
+            "humidity": 50,
+            "temp": 20,
+            "age": 0,
+            "tank": 50,
+            "budget": 5,
+            "rain": false,
+            "reset": false
+          },
+          "before": {
+            "pump": false,
+            "vent": false,
+            "fault": false
+          },
+          "expected": {
+            "pump": false,
+            "vent": false,
+            "fault": false,
+            "used": 0
+          },
+          "actual": {
+            "pump": false,
+            "vent": false,
+            "fault": false,
+            "used": 0
+          },
+          "pass": true,
+          "reason": "NORMAL",
+          "trace": [
+            "valid:true",
+            "fresh:true",
+            "latched:false",
+            "ventStart:false",
+            "ventStop:true",
+            "pumpStart:false",
+            "pumpStop:true",
+            "cold:false",
+            "rain:false",
+            "lowTank:false"
+          ]
+        },
+        {
+          "number": 2,
+          "input": {
+            "humidity": 35,
+            "temp": 20,
+            "age": 0,
+            "tank": 50,
+            "budget": 5,
+            "rain": false,
+            "reset": false
+          },
+          "before": {
+            "pump": false,
+            "vent": false,
+            "fault": false
+          },
+          "expected": {
+            "pump": false,
+            "vent": false,
+            "fault": false,
+            "used": 0
+          },
+          "actual": {
+            "pump": false,
+            "vent": false,
+            "fault": false,
+            "used": 0
+          },
+          "pass": true,
+          "reason": "NORMAL",
+          "trace": [
+            "valid:true",
+            "fresh:true",
+            "latched:false",
+            "ventStart:false",
+            "ventStop:true",
+            "pumpStart:false",
+            "pumpStop:false",
+            "cold:false",
+            "rain:false",
+            "lowTank:false"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "T03-LATCH: проверка удержания аварии при свежем входе без reset",
+      "steps": [
+        {
+          "number": 1,
+          "input": {
+            "humidity": 20,
+            "temp": 20,
+            "age": 31,
+            "tank": 50,
+            "budget": 5,
+            "rain": false,
+            "reset": false
+          },
+          "before": {
+            "pump": false,
+            "vent": false,
+            "fault": false
+          },
+          "expected": {
+            "pump": false,
+            "vent": false,
+            "fault": true,
+            "used": 0
+          },
+          "actual": {
+            "pump": false,
+            "vent": false,
+            "fault": true,
+            "used": 0
+          },
+          "pass": true,
+          "reason": "STALE",
+          "trace": [
+            "valid:true",
+            "fresh:false"
+          ]
+        },
+        {
+          "number": 2,
+          "input": {
+            "humidity": 20,
+            "temp": 20,
+            "age": 0,
+            "tank": 50,
+            "budget": 5,
+            "rain": false,
+            "reset": false
+          },
+          "before": {
+            "pump": false,
+            "vent": false,
+            "fault": true
+          },
+          "expected": {
+            "pump": false,
+            "vent": false,
+            "fault": true,
+            "used": 0
+          },
+          "actual": {
+            "pump": false,
+            "vent": false,
+            "fault": true,
+            "used": 0
+          },
+          "pass": true,
+          "reason": "LATCHED",
+          "trace": [
+            "valid:true",
+            "fresh:true",
+            "latched:true"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "T09-BUDGET: проверка приоритета вентиляции при budget=3",
+      "steps": [
+        {
+          "number": 1,
+          "input": {
+            "humidity": 20,
+            "temp": 30,
+            "age": 0,
+            "tank": 50,
+            "budget": 3,
+            "rain": false,
+            "reset": false
+          },
+          "before": {
+            "pump": false,
+            "vent": false,
+            "fault": false
+          },
+          "expected": {
+            "pump": false,
+            "vent": true,
+            "fault": false,
+            "used": 3
+          },
+          "actual": {
+            "pump": false,
+            "vent": true,
+            "fault": false,
+            "used": 3
+          },
+          "pass": true,
+          "reason": "BUDGET",
+          "trace": [
+            "valid:true",
+            "fresh:true",
+            "latched:false",
+            "ventStart:true",
+            "pumpStart:true",
+            "cold:false",
+            "rain:false",
+            "lowTank:false",
+            "ventFits:true",
+            "pumpFits:false"
+          ]
+        }
+      ]
+    }
+  ],
+  "baselinePass": true,
+  "candidatePass": true,
+  "coverage": {
+    "covered": [
+      "valid:true",
+      "fresh:true",
+      "latched:false",
+      "ventStart:false",
+      "ventStop:true",
+      "pumpStart:false",
+      "pumpStop:true",
+      "cold:false",
+      "rain:false",
+      "lowTank:false",
+      "pumpStop:false",
+      "fresh:false",
+      "latched:true",
+      "ventStart:true",
+      "pumpStart:true",
+      "ventFits:true",
+      "pumpFits:false"
+    ],
+    "missing": [
+      "valid:false",
+      "ventStop:false",
+      "cold:true",
+      "rain:true",
+      "lowTank:true",
+      "ventFits:false",
+      "pumpFits:true"
+    ],
+    "total": 24,
+    "percent": 71
+  },
+  "mutations": [
+    {
+      "id": "M1",
+      "killed": true,
+      "killedBy": [
+        "T05-PUMP-HYST: проверка удержания pump на границе 35 / 2"
+      ],
+      "status": "killed"
+    },
+    {
+      "id": "M2",
+      "killed": false,
+      "killedBy": [],
+      "status": "survived"
+    },
+    {
+      "id": "M3",
+      "killed": true,
+      "killedBy": [
+        "T09-BUDGET: проверка приоритета вентиляции при budget=3 / 1"
+      ],
+      "status": "killed"
+    },
+    {
+      "id": "M4",
+      "killed": false,
+      "killedBy": [],
+      "status": "survived"
+    },
+    {
+      "id": "M5",
+      "killed": true,
+      "killedBy": [
+        "T03-LATCH: проверка удержания аварии при свежем входе без reset / 2"
+      ],
+      "status": "killed"
+    },
+    {
+      "id": "M6",
+      "killed": true,
+      "killedBy": [
+        "T09-BUDGET: проверка приоритета вентиляции при budget=3 / 1"
+      ],
+      "status": "killed"
+    },
+    {
+      "id": "M7",
+      "killed": false,
+      "killedBy": [],
+      "status": "survived"
+    },
+    {
+      "id": "M8",
+      "killed": false,
+      "killedBy": [],
+      "status": "survived"
+    }
+  ],
+  "mutationScore": 50
+}
+
+Учебные исходы решений, не покрытие всего JavaScript. Контрольная реализация не заменяет независимый оракул.
